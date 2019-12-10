@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css">​
+    <title>Dashboard</title>
+</head>
+<style>
+    #canvas {
+        width: 500px;
+        height: 500px;
+        margin: auto;
+    }
+</style>
+
+<body>
+
+    <div id="canvas">
+        <canvas id="myChart" style="background-color: rgba(255,204,255,0.3)"></canvas>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>​
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        socket.on('#teste', function(msg){
+            alert(msg)
+        });
+        let professor = ['Otávio', 'Denise']
+        let prof = [0, 0]
+        socket.on('#dado',function(voto){
+            if(geraVoto()>5){
+               prof[0] += voto
+               myChart.update()
+            }else {
+                prof[1] += voto
+                myChart.update()
+            }
+        })
+    </script>
+    <script>
+
+        var ctx = document.getElementById('myChart').getContext('2d')
+        
+        geraVoto = ()=>{
+            let aux = 0
+            aux = Math.floor(Math.random()* 10 + 1)
+
+            return aux
+        }
+        var myChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: professor,
+                datasets: [{
+                    backgroundColor: [
+                        'rgba(51,255,153,0.4)',
+                        'rgba(255,0,51,0.4)'
+                    ],
+                    borderColor: [
+                        '#FFFFFA',
+                        '#FFFFFA'
+                    ],
+
+                    data: prof
+                }]
+            },
+            options: {
+                legend: {
+                    display: true,
+                },
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Votação quem atrasa mais a nota (é brincadeira me perdoa)'
+                },
+            }
+
+
+        });
+    </script>
+</body>
+
+</html>
